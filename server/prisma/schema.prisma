@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  password     String
+  name         String
+  createdAt    DateTime  @default(now())
+  monitors     Monitor[]
+}
+
+model Monitor {
+  id        Int       @id @default(autoincrement())
+  name      String
+  url       String
+  interval  Int       @default(60) // seconds
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  checks    Check[]
+  incidents Incident[]
+}
+
+model Check {
+  id           Int      @id @default(autoincrement())
+  monitorId    Int
+  status       String
+  responseTime Int
+  checkedAt    DateTime @default(now())
+  monitor      Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+}
+
+model Incident {
+  id        Int       @id @default(autoincrement())
+  monitorId Int
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+  monitor   Monitor   @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+}

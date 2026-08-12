@@ -1,0 +1,41 @@
+/*app.post('/api/monitors', async (req, res) => {
+  try {
+    const { name, url } = req.body;
+
+    if (!name || !url) {
+      return res.status(400).json({ error: 'Name and URL are required' });
+    }
+
+    const monitor = await prisma.monitor.create({
+      data: { name, url },
+    });
+
+    res.status(201).json(monitor);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+app.get('/api/monitors', async (req, res) => {
+  try {
+    const monitors = await prisma.monitor.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    res.json(monitors);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+app.delete('/api/monitors/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.monitor.delete({
+      where: { id: parseInt(id) },
+    });
+
+    res.json({ message: 'Monitor deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});*/

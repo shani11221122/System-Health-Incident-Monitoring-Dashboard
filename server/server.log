@@ -1,0 +1,13 @@
+◇ injected env (6) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+Server running on port http://localhost:5000
+Monitoring started...
+Monitoring cycle failed: 
+Invalid `prisma.monitor.findMany()` invocation in
+E:\MYPROJECTS\Health_detector\server\services\cronService.js:79:45
+
+  76 // Schedule a lightweight job every 30 seconds to check due monitors
+  77 cron.schedule('*/30 * * * * *', async () => {
+  78   try {
+→ 79     const monitors = await prisma.monitor.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 15, connection limit: 13)
+A client connected: VIaYSE_jegS_0VYcAAAB

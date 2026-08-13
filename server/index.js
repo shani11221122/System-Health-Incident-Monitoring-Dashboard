@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const { startMonitoring } = require('./services/cronService');
 const app = express();
+app.set('trust proxy', 1);
 const monitorRoutes = require('./routes/monitor.routes');
 const authRoutes = require('./routes/auth.routes');
 const http = require('http');

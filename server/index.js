@@ -9,6 +9,7 @@ const http = require('http');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { Server } = require('socket.io');
+const prisma = require('./prisma');
 
 const allowedOrigins = [
   'http://localhost:5173',
@@ -18,6 +19,11 @@ const allowedOrigins = [
   'https://system-health-incident-monitoring-d.vercel.app',
   'https://health-dashboard-mu-ashy.vercel.app',
 ].filter(Boolean);
+
+// Debug info to verify which origins/env are being used in the deployed server
+console.log('ALLOWED ORIGINS:', allowedOrigins);
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
+console.log('CLIENT_URL:', process.env.CLIENT_URL);
 
 const isAllowedOrigin = (origin) => {
   if (!origin) return true;
@@ -70,7 +76,32 @@ app.use('/api/auth', authLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/api', monitorRoutes);
 
-// 404 handler
+// Health check (place before 404)
+app.get('/health', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Backend is running'
+  });
+});
+
+// Test database connection (uses Prisma)
+app.get('/test-db', async (req, res) => {
+  try {
+    const result = await prisma.$queryRaw`SELECT NOW() as now`;
+    res.json({
+      success: true,
+      databaseTime: result
+    });
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// 404 handler — ALWAYS last
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
